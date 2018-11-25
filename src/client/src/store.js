@@ -1,14 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {defaultClient as apolloClient} from './main';
-import {gql} from 'apollo-boost';
+import {GET_POSTS, LOGIN, REGISTER, GET_CURRENT_USER} from '../queries';
+import router from './router';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     posts: [],
-    loading: false
+    loading: false,
+    user: null
   },
   mutations: {
     getPosts(state, posts) {
@@ -16,32 +18,47 @@ export default new Vuex.Store({
     },
     setLoading(state, loading) {
       state.loading = loading;
+    },
+    setUser(state, user) {
+      state.user = user;
     }
   },
   actions: {
     getPosts({commit}) {
       commit('setLoading', true);
-      apolloClient.query({
-        query: gql`
-          query {
-            getPosts {
-              _id
-              title
-              imageUrl
-              categories
-              description
-            }
-          }
-        `,
+      apolloClient.query({query: GET_POSTS})
+        .then(({data}) => {
+          commit('getPosts', data.getPosts);
+          commit('setLoading', false);
+        })
+        .catch(error => {
+          commit('setLoading', false);
+          console.error(error)
+        })
+    },
+    setUser({commit}, payload) {
+      apolloClient.mutate({
+        mutation: LOGIN,
+        variables: payload
       })
-      .then(({data}) => {
-        commit('getPosts', data.getPosts);
-        commit('setLoading', false);
-      })
-      .catch(error => {
-        commit('setLoading', false);
-        console.log(error)
-      })
+        .then(({data}) => {
+          localStorage.setItem('graph-token', data.login.token);
+          router.push({name: 'home'})
+        })
+        .catch(error => console.error(error))
+    },
+    getCurrentUser({commit}) {
+      commit('setLoading', true);
+      apolloClient.query({query: GET_CURRENT_USER})
+        .then(({data}) => {
+          console.log(data.getCurrentUser)
+          commit('setUser', data.getCurrentUser)
+          commit('setLoading', false);
+        })
+        .catch(error => {
+          console.error(error)
+          commit('setLoading', false);
+        })
     }
   },
   getters: {
@@ -50,6 +67,7 @@ export default new Vuex.Store({
     },
     loading(state) {
       return state.loading;
-    }
+    },
+    user: (state) => state.user
   }
 });

@@ -27,11 +27,17 @@ type Message {
     messageUser: User!
 }
 
+type Token {
+    token: String!
+}
+
 type Query {
+    getCurrentUser: User
     getPosts: [Post]
 }
 
 type Mutation {
     addPost(title: String!, imageUrl: String!, categories: [String]!, description: String!, creatorId: ID!): Post!
-    signupUser(username: String!, email: String!, password: String!): User!
+    login(username: String!, password: String!): Token!
+    register(username: String!, email: String!, password: String!): Token!
 }
