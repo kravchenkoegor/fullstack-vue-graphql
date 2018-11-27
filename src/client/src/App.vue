@@ -127,6 +127,37 @@
       <transition name="fade">
         <router-view/>
       </transition>
+
+      <v-snackbar
+        v-model="authSnackbar"
+        :timeout="3000"
+        color="success"
+        bottom
+        left
+      >
+        <v-icon class="mr-3">fas fa-check-circle</v-icon>
+        <h3>Login successful!</h3>
+        <v-btn
+          flat
+          @click="authSnackbar = false"
+        >Close</v-btn>
+      </v-snackbar>
+
+      <v-snackbar
+        v-if="authError"
+        v-model="authErrorSnackbar"
+        :timeout="5000"
+        color="error"
+        bottom
+        left
+      >
+        <v-icon class="mr-3">fas fa-exclamation-circle</v-icon>
+        <h3>{{authError.message}}</h3>
+        <v-btn
+          flat
+          to="/login"
+        >Login</v-btn>
+      </v-snackbar>
     </v-content>
 
   </v-app>
@@ -139,10 +170,24 @@
     name: 'App',
     data: () => ({
       drawer: false,
-      title: 'Vue + GraphQL'
+      title: 'Vue + GraphQL',
+      authSnackbar: false,
+      authErrorSnackbar: false
     }),
+    watch: {
+      user(newValue, oldValue) {
+        if (oldValue === null) {
+          this.authSnackbar = true;
+        }
+      },
+      authError(value) {
+        if (value !== null) {
+          this.authErrorSnackbar = true;
+        }
+      }
+    },
     computed: {
-      ...mapGetters(['user']),
+      ...mapGetters(['user', 'authError']),
       menuButtons() {
         let items = [
           { title: 'Posts', icon: 'fas fa-images', link: '/posts' },
