@@ -12,7 +12,12 @@
             <v-toolbar-title>Welcome back!</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-form @submit.prevent="onSubmit">
+            <v-form
+                v-model="isFormValid"
+                lazy-validation
+                ref="form"
+                @submit.prevent="onSubmit"
+            >
               <v-text-field
                   v-model="username"
                   prepend-icon="fas fa-user"
@@ -20,6 +25,7 @@
                   label="Username"
                   type="text"
                   autocomplete="new-password"
+                  :rules="usernameRules"
               ></v-text-field>
               <v-text-field
                   v-model="password"
@@ -27,6 +33,7 @@
                   name="password"
                   label="Password"
                   type="password"
+                  :rules="passwordRules"
               ></v-text-field>
             </v-form>
 
@@ -34,7 +41,17 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="onSubmit">Login</v-btn>
+            <v-btn
+              :loading="loading"
+              color="primary"
+              @click="onSubmit"
+              :disabled="!isFormValid"
+            >
+              Login
+              <span slot="loader" class="custom-loader">
+                <v-icon dark small>fas fa-sync-alt</v-icon>
+              </span>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -48,11 +65,20 @@
   export default {
     name: 'Login',
     data: () => ({
-      username: process.env.VUE_APP_USER,
-      password: process.env.VUE_APP_PASSWORD
+      username: '', //process.env.VUE_APP_USER,
+      password: '', //process.env.VUE_APP_PASSWORD,
+      usernameRules: [
+        username => !!username || 'Username is required',
+        username => username.length >= 3 || 'Username must be at least 3 characters'
+      ],
+      passwordRules: [
+        password => !!password || 'Password is required',
+        password => password.length >= 6 || 'Password must be at least 6 characters'
+      ],
+      isFormValid: true
     }),
     computed: {
-      ...mapGetters(['user', 'error'])
+      ...mapGetters(['user', 'error', 'loading'])
     },
     watch: {
       user(value) {
@@ -63,10 +89,12 @@
     },
     methods: {
       onSubmit() {
-        return this.$store.dispatch('setUser', {
-          username: this.username,
-          password: this.password
-        });
+        if (this.$refs.form.validate()) {
+          return this.$store.dispatch('setUser', {
+            username: this.username,
+            password: this.password
+          });
+        }
       }
     }
   }
@@ -84,6 +112,47 @@
       &:hover {
         color: rgba(#000, .87);
       }
+    }
+  }
+
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 </style>

@@ -48,6 +48,7 @@ export default new Vuex.Store({
     },
     setUser({commit}, payload) {
       commit('clearError');
+      commit('setLoading', true)
       localStorage.setItem('graph-token', '');
       apolloClient.mutate({
         mutation: LOGIN,
@@ -58,6 +59,7 @@ export default new Vuex.Store({
           router.go();
         })
         .catch((error) => {
+          commit('setLoading', false);
           commit('setError', error);
           console.error(error);
         });
