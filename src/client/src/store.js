@@ -21,6 +21,9 @@ export default new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user;
+    },
+    signoutUser(state) {
+      state.user = null;
     }
   },
   actions: {
@@ -43,7 +46,8 @@ export default new Vuex.Store({
       })
         .then(({data}) => {
           localStorage.setItem('graph-token', data.login.token);
-          router.push({name: 'home'})
+          router.go()
+          // router.push({name: 'home'})
         })
         .catch(error => console.error(error))
     },
@@ -51,7 +55,6 @@ export default new Vuex.Store({
       commit('setLoading', true);
       apolloClient.query({query: GET_CURRENT_USER})
         .then(({data}) => {
-          console.log(data.getCurrentUser)
           commit('setUser', data.getCurrentUser)
           commit('setLoading', false);
         })
@@ -59,15 +62,17 @@ export default new Vuex.Store({
           console.error(error)
           commit('setLoading', false);
         })
+    },
+    async signoutUser({commit}) {
+      commit('signoutUser');
+      localStorage.setItem('graph-token', '');
+      await apolloClient.resetStore();
+      router.push('/');
     }
   },
   getters: {
-    posts(state) {
-      return state.posts;
-    },
-    loading(state) {
-      return state.loading;
-    },
+    posts: (state) => state.posts,
+    loading: (state) => state.loading,
     user: (state) => state.user
   }
 });

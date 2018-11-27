@@ -48,7 +48,15 @@
       password: process.env.VUE_APP_PASSWORD
     }),
     computed: {
-      ...mapGetters['user']
+      ...mapGetters(['user'])
+    },
+    watch: {
+      user(value) {
+        if (value) {
+          console.log(value)
+          this.$router.push('/')
+        }
+      }
     },
     methods: {
       onSubmit() {

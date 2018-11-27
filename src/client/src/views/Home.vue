@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container>
     <v-layout v-if="loading">
       <v-flex xs12 text-xs-center>
         <v-progress-circular

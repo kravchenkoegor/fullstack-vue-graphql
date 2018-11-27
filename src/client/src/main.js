@@ -48,6 +48,6 @@ new Vue({
   store,
   render: h => h(App),
   created() {
-    this.$store.dispatch('getCurrentUser')
+    return this.$store.dispatch('getCurrentUser')
   }
 }).$mount('#app')
