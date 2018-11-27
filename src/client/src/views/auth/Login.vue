@@ -65,8 +65,8 @@
   export default {
     name: 'Login',
     data: () => ({
-      username: '', //process.env.VUE_APP_USER,
-      password: '', //process.env.VUE_APP_PASSWORD,
+      username: process.env.VUE_APP_USER,
+      password: process.env.VUE_APP_PASSWORD,
       usernameRules: [
         username => !!username || 'Username is required',
         username => username.length >= 3 || 'Username must be at least 3 characters'
