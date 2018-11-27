@@ -17,28 +17,28 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import('./components/auth/Login.vue')
+      component: () => import('./views/auth/Login.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('./components/auth/Register.vue')
+      component: () => import('./views/auth/Register.vue')
     },
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('./components/auth/Profile.vue'),
+      component: () => import('./views/auth/Profile.vue'),
       beforeEnter: AuthGuard
     },
     {
       path: '/post/add',
       name: 'add',
-      component: () => import('./components/posts/AddPost.vue')
+      component: () => import('./views/posts/AddPost.vue')
     },
     {
       path: '/posts',
       name: 'posts',
-      component: () => import('./components/posts/Posts.vue')
+      component: () => import('./views/posts/Posts.vue')
     },
   ]
 })

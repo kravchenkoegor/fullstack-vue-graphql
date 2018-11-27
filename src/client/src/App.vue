@@ -146,8 +146,7 @@
       menuButtons() {
         let items = [
           { title: 'Posts', icon: 'fas fa-images', link: '/posts' },
-          { title: 'Create', icon: 'fas fa-edit', link: '/post/add' },
-          // { title: 'Profile', icon: 'fas fa-user-circle', link: '/profile' },
+          { title: 'Create', icon: 'fas fa-edit', link: '/post/add' }
         ];
 
         if (!this.user) {
@@ -162,7 +161,7 @@
     },
     methods: {
       signoutUser() {
-        return this.$store.dispatch('signoutUser');
+        return this.$store.dispatch('clearUser');
       }
     }
   }
@@ -178,10 +177,6 @@
         opacity: .8;
       }
     }
-
-    /*/deep/ .v-icon.fas.fa-search {*/
-      /*font-size: 18px;*/
-    /*}*/
   }
 
   .fade-enter-active,

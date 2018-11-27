@@ -5,9 +5,13 @@ import router from './router'
 import store from './store'
 import './plugins/vuetify'
 
+// Register global component
+import FormAlert from './components/shared/FormAlert'
+Vue.component('form-alert', FormAlert)
+
+// Apollo
 import ApolloClient from 'apollo-boost'
 import VueApollo from 'vue-apollo'
-
 Vue.use(VueApollo)
 
 export const defaultClient = new ApolloClient({
@@ -28,12 +32,12 @@ export const defaultClient = new ApolloClient({
   },
   onError: ({graphQLErrors, networkError}) => {
     if (networkError) {
-      console.log({networkError})
+      console.error({networkError})
     }
 
     if (graphQLErrors) {
       for (let error of graphQLErrors) {
-        console.log(error)
+        console.error(error)
       }
     }
   }

@@ -3,6 +3,10 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
 
+        <template v-if="error">
+          <form-alert :message="error.message"></form-alert>
+        </template>
+
         <v-card class="elevation-12 form">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Welcome back!</v-toolbar-title>
@@ -48,7 +52,7 @@
       password: process.env.VUE_APP_PASSWORD
     }),
     computed: {
-      ...mapGetters(['user'])
+      ...mapGetters(['user', 'error'])
     },
     watch: {
       user(value) {

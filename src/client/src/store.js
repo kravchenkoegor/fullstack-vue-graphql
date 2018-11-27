@@ -10,7 +10,8 @@ export default new Vuex.Store({
   state: {
     posts: [],
     loading: false,
-    user: null
+    user: null,
+    error: null
   },
   mutations: {
     getPosts(state, posts) {
@@ -22,8 +23,14 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user;
     },
-    signoutUser(state) {
+    clearUser(state) {
       state.user = null;
+    },
+    setError(state, error) {
+      state.error = error;
+    },
+    clearError(state) {
+      state.error = null;
     }
   },
   actions: {
@@ -40,6 +47,7 @@ export default new Vuex.Store({
         })
     },
     setUser({commit}, payload) {
+      commit('clearError');
       localStorage.setItem('graph-token', '');
       apolloClient.mutate({
         mutation: LOGIN,
@@ -49,7 +57,10 @@ export default new Vuex.Store({
           localStorage.setItem('graph-token', data.login.token);
           router.go();
         })
-        .catch(error => console.error(error));
+        .catch((error) => {
+          commit('setError', error);
+          console.error(error);
+        });
     },
     getCurrentUser({commit}) {
       commit('setLoading', true);
@@ -63,8 +74,8 @@ export default new Vuex.Store({
           commit('setLoading', false);
         })
     },
-    async signoutUser({commit}) {
-      commit('signoutUser');
+    async clearUser({commit}) {
+      commit('clearUser');
       localStorage.setItem('graph-token', '');
       await apolloClient.resetStore();
       router.push('/');
@@ -73,6 +84,7 @@ export default new Vuex.Store({
   getters: {
     posts: (state) => state.posts,
     loading: (state) => state.loading,
-    user: (state) => state.user
+    user: (state) => state.user,
+    error: (state) => state.error
   }
 });
