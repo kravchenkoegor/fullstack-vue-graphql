@@ -1,8 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from './views/Home.vue';
+import AuthGuard from './AuthGuard';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -26,7 +27,8 @@ export default new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('./components/auth/Profile.vue')
+      component: () => import('./components/auth/Profile.vue'),
+      beforeEnter: AuthGuard
     },
     {
       path: '/post/add',

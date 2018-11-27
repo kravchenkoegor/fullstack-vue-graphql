@@ -53,8 +53,7 @@
     watch: {
       user(value) {
         if (value) {
-          console.log(value)
-          this.$router.push('/')
+          this.$router.push('/');
         }
       }
     },
@@ -63,7 +62,7 @@
         return this.$store.dispatch('setUser', {
           username: this.username,
           password: this.password
-        })
+        });
       }
     }
   }

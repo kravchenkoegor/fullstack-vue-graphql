@@ -36,30 +36,30 @@ export default new Vuex.Store({
         })
         .catch(error => {
           commit('setLoading', false);
-          console.error(error)
+          console.error(error);
         })
     },
     setUser({commit}, payload) {
+      localStorage.setItem('graph-token', '');
       apolloClient.mutate({
         mutation: LOGIN,
         variables: payload
       })
         .then(({data}) => {
           localStorage.setItem('graph-token', data.login.token);
-          router.go()
-          // router.push({name: 'home'})
+          router.go();
         })
-        .catch(error => console.error(error))
+        .catch(error => console.error(error));
     },
     getCurrentUser({commit}) {
       commit('setLoading', true);
       apolloClient.query({query: GET_CURRENT_USER})
         .then(({data}) => {
-          commit('setUser', data.getCurrentUser)
+          commit('setUser', data.getCurrentUser);
           commit('setLoading', false);
         })
         .catch(error => {
-          console.error(error)
+          console.error(error);
           commit('setLoading', false);
         })
     },
