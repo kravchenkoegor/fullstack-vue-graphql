@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #e3e3ee">
+  <v-app style="background: #eeeeee">
     <v-toolbar
       app
       class="toolbar"
@@ -213,6 +213,10 @@
 </script>
 
 <style lang="scss">
+  html {
+    overflow-y: auto !important;
+  }
+
   .toolbar {
     &__link {
       cursor: pointer;

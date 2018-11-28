@@ -5,12 +5,12 @@ import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   iconfont: 'fa',
   theme: {
-    primary: "#1F487E",
+    primary: "#094D92",
     secondary: "#1D3461",
-    accent: "#339989",
-    error: "#B23A48",
-    warning: "#F18F01",
-    info: "#3066BE",
-    success: "#44CF6C"
+    accent: "#5D737E",
+    error: "#FE4A49",
+    // warning: "#F18F01",
+    // info: "#3066BE",
+    success: "#68B684"
   }
 })

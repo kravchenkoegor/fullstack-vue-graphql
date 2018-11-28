@@ -4,7 +4,7 @@
       <v-flex xs12 sm8 md4>
 
         <template v-if="error">
-          <form-alert :message="error.message"></form-alert>
+          <form-alert :message="formatError(error.message)"></form-alert>
         </template>
 
         <v-card class="elevation-12 form">
@@ -13,31 +13,32 @@
           </v-toolbar>
           <v-card-text>
             <v-form
-                v-model="isFormValid"
-                lazy-validation
-                ref="form"
-                @submit.prevent="onSubmit"
+              v-model="isFormValid"
+              lazy-validation
+              ref="form"
+              @submit.prevent="onSubmit"
             >
               <v-text-field
-                  v-model="username"
-                  prepend-icon="fas fa-user"
-                  name="login"
-                  label="Username"
-                  type="text"
-                  autocomplete="new-password"
-                  :rules="usernameRules"
+                v-model="username"
+                prepend-icon="fas fa-user"
+                name="login"
+                label="Username"
+                type="text"
+                autocomplete="new-password"
+                :rules="usernameRules"
               ></v-text-field>
+
               <v-text-field
-                  v-model="password"
-                  prepend-icon="fas fa-lock"
-                  name="password"
-                  label="Password"
-                  type="password"
-                  :rules="passwordRules"
+                v-model="password"
+                prepend-icon="fas fa-lock"
+                name="password"
+                label="Password"
+                type="password"
+                :rules="passwordRules"
               ></v-text-field>
             </v-form>
 
-            <router-link to="/register" class="form__link">Don't have an account?</router-link>
+            <p class="form__link">Don't have an account? <router-link to="/register">Sign up here.</router-link></p>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -45,7 +46,7 @@
               :loading="loading"
               color="primary"
               @click="onSubmit"
-              :disabled="!isFormValid"
+              :disabled="!isFormValid || loading"
             >
               Login
               <span slot="loader" class="custom-loader">
@@ -95,6 +96,9 @@
             password: this.password
           });
         }
+      },
+      formatError(msg) {
+        return msg.replace('GraphQL error: ', '');
       }
     }
   }
@@ -105,12 +109,16 @@
     &__link {
       display: block;
       font-size: 16px;
+      margin-bottom: 0;
       padding-top: 8px;
       text-align: left;
-      text-decoration: none;
 
-      &:hover {
+      a {
         color: rgba(#000, .87);
+
+        &:hover {
+          color: rgba(#000, .87);
+        }
       }
     }
   }

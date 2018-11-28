@@ -35,7 +35,7 @@ export default new Vuex.Store({
     },
     setAuthError(state, error) {
       state.authError = error;
-    }
+    },
   },
   actions: {
     getPosts({commit}) {
@@ -50,10 +50,26 @@ export default new Vuex.Store({
           console.error(error);
         })
     },
+    registerUser({commit}, payload) {
+      commit('clearError');
+      commit('setLoading', true);
+      apolloClient.mutate({
+        mutation: REGISTER,
+        variables: payload
+      })
+        .then(({data}) => {
+          localStorage.setItem('graph-token', data.register.token);
+          router.go()
+        })
+        .catch((error) => {
+          commit('setLoading', false);
+          commit('setError', error);
+          console.error(error);
+        });
+    },
     setUser({commit}, payload) {
       commit('clearError');
-      commit('setLoading', true)
-      localStorage.setItem('graph-token', '');
+      commit('setLoading', true);
       apolloClient.mutate({
         mutation: LOGIN,
         variables: payload
@@ -82,7 +98,6 @@ export default new Vuex.Store({
     },
     async clearUser({commit}) {
       commit('clearUser');
-      localStorage.setItem('graph-token', '');
       await apolloClient.resetStore();
       router.push('/');
     }
