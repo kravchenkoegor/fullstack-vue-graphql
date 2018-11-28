@@ -16,8 +16,13 @@ type Post {
     description: String
     createdDate: String
     likes: Int
-    creatorId: ID
+    createdBy: User!
     messages: [Message]
+}
+
+type PostsPage {
+    posts: [Post]
+    hasMore: Boolean
 }
 
 type Message {
@@ -34,6 +39,7 @@ type Token {
 type Query {
     getCurrentUser: User
     getPosts: [Post]
+    infiniteScrollPosts(pageNum: Int!, pageSize: Int!): PostsPage
 }
 
 type Mutation {

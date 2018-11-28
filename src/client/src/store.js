@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {defaultClient as apolloClient} from './main';
-import {GET_POSTS, ADD_POST, LOGIN, REGISTER, GET_CURRENT_USER} from '../queries';
+import {GET_POSTS, ADD_POST, LOGIN, REGISTER, GET_CURRENT_USER} from './queries';
 import router from './router';
 
 Vue.use(Vuex);

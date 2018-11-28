@@ -33,7 +33,7 @@ const PostSchema = new mongoose.Schema({
   },
   // property ('createdBy') === path
   // ref ('User') === model
-  creatorId: {
+  createdBy: {
     type: ObjectId,
     // required: true,
     ref: 'User'
