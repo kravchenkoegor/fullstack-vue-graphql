@@ -33,7 +33,8 @@ export default new Router({
     {
       path: '/post/add',
       name: 'add',
-      component: () => import('./views/posts/AddPost.vue')
+      component: () => import('./views/posts/AddPost.vue'),
+      beforeEnter: AuthGuard
     },
     {
       path: '/posts',

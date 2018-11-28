@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container grid-list-lg my-5>
     <v-layout v-if="loading">
       <v-flex xs12 text-xs-center>
         <v-progress-circular
@@ -9,23 +9,30 @@
       </v-flex>
     </v-layout>
 
-
     <v-layout v-else flex row wrap>
-      <v-flex xs12 my-4>
-        <v-carousel
-            v-if="!loading && posts.length"
-            class="carousel"
-            height="550"
-            hide-delimiters
-        >
-          <v-carousel-item
-              v-for="post in posts"
-              :key="post._id"
-              :src="post.imageUrl"
-          >
-            <h1 class="carousel__title">{{ post.title }}</h1>
-          </v-carousel-item>
-        </v-carousel>
+      <v-flex
+        xs12
+        sm4
+        mb-4
+        v-for="post in posts"
+        :key="post._id"
+      >
+        <v-card class="card elevation-4">
+          <v-responsive aspect-ratio="16/10">
+            <img :src="post.imageUrl" alt="" class="card__img">
+          </v-responsive>
+
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">{{post.title}}</h3>
+              <div>{{post.description}}</div>
+            </div>
+          </v-card-title>
+
+          <v-card-actions>
+            <v-btn flat color="warning">Explore</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -36,15 +43,8 @@
 
   export default {
     name: 'home',
-    components: {},
     loading: true,
     computed: {
-      // posts() {
-      //   return this.$store.getters.getStatePosts
-      // },
-      // loading() {
-      //   return this.$store.getters.getLoading
-      // }
       ...mapGetters(['posts', 'loading'])
     },
     created() {
@@ -67,6 +67,12 @@
       position: absolute;
       right: 0;
       text-align: center;
+    }
+  }
+
+  .card {
+    &__img {
+      max-width: 100%;
     }
   }
 </style>

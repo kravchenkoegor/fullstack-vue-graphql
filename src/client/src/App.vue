@@ -44,7 +44,7 @@
         <template v-if="user">
           <v-btn
             flat
-            to="profile"
+            to="/profile"
           >
             <v-icon left>fas fa-user-circle</v-icon>
             <v-badge right color="accent">
@@ -96,7 +96,7 @@
 
         <template v-if="user">
           <v-list-tile
-            to="profile"
+            to="/profile"
           >
             <v-list-tile-action>
               <v-icon left>fas fa-user-circle</v-icon>
@@ -214,7 +214,13 @@
 
 <style lang="scss">
   html {
+    background-color: #eeeeee;
     overflow-y: auto !important;
+  }
+
+  .container {
+    max-width: 1170px !important;
+    padding: 0 15px !important;
   }
 
   .toolbar {

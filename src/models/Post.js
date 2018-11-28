@@ -21,7 +21,7 @@ const PostSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true
+    // required: true
   },
   createdDate: {
     type: Date,
@@ -33,7 +33,7 @@ const PostSchema = new mongoose.Schema({
   },
   // property ('createdBy') === path
   // ref ('User') === model
-  createdBy: {
+  creatorId: {
     type: ObjectId,
     required: true,
     ref: 'User'

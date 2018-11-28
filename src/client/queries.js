@@ -11,6 +11,20 @@ export const GET_POSTS = gql`
   }  
 `;
 
+// Posts Mutations
+export const ADD_POST = gql`
+  mutation ($title: String!, $imageUrl: String!, $categories: [String]!, $description: String, $creatorId: ID) {
+    addPost(title: $title, imageUrl: $imageUrl, categories: $categories, description: $description, creatorId: $creatorId) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+      createdDate
+    }
+  }
+`;
+
 // User Mutations
 export const LOGIN = gql`
   mutation ($username: String!, $password: String!) {
@@ -28,6 +42,7 @@ export const REGISTER = gql`
   }
 `;
 
+// User Query
 export const GET_CURRENT_USER = gql`
   query {
     getCurrentUser {
