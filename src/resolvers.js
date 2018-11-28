@@ -20,7 +20,7 @@ module.exports = {
     },
     getPosts: async (_, args, {Post}) => {
       return await Post.find({})
-        .sort({createdDate: 'asc'})
+        .sort({createdDate: 'desc'})
         .populate({
           path: 'createdBy',
           model: 'User'

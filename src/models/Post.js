@@ -35,7 +35,7 @@ const PostSchema = new mongoose.Schema({
   // ref ('User') === model
   creatorId: {
     type: ObjectId,
-    required: true,
+    // required: true,
     ref: 'User'
   },
   messages: [{

@@ -12,25 +12,27 @@
     <v-layout v-else flex row wrap>
       <v-flex
         xs12
-        sm4
+        sm6
+        lg4
         mb-4
         v-for="post in posts"
         :key="post._id"
       >
         <v-card class="card elevation-4">
-          <v-responsive aspect-ratio="16/10">
+          <v-responsive aspect-ratio="16/10" class="card__media">
             <img :src="post.imageUrl" alt="" class="card__img">
           </v-responsive>
 
-          <v-card-title primary-title>
+          <v-card-title>
             <div>
               <h3 class="headline mb-0">{{post.title}}</h3>
               <div>{{post.description}}</div>
             </div>
           </v-card-title>
 
-          <v-card-actions>
-            <v-btn flat color="warning">Explore</v-btn>
+          <v-card-actions class="pa-3">
+            <v-spacer></v-spacer>
+            <v-btn raised color="accent">Explore</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -71,8 +73,13 @@
   }
 
   .card {
+    &__media {
+      max-height: 460px;
+    }
+
     &__img {
-      max-width: 100%;
+      height: 100%;
+      // max-width: 100%;
     }
   }
 </style>
