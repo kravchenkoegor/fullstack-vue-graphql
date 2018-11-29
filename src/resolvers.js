@@ -62,6 +62,21 @@ module.exports = {
         path: 'messages.messageUser',
         model: 'User'
       })
+    },
+    searchPosts: async (_, {searchText}, {Post}) => {
+      if (searchText) {
+        return await Post.find(
+          // perform text search
+          {$text: { $search: searchText }},
+          // assign 'searchText' a text score to provide best match
+          {score: { $meta: 'textScore' }}
+          // sort result according to a text score and by likes in descending order
+        ).sort({
+          score: { $meta: 'textScore' },
+          likes: 'desc'
+        })
+          .limit(5);
+      }
     }
   },
   Mutation: {

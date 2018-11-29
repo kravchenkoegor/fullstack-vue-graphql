@@ -19,14 +19,58 @@
 
       <v-spacer></v-spacer>
 
-      <v-text-field
-        class="hidden-sm-and-down"
-        color="#fff"
-        flex
-        prepend-icon="fas fa-search"
-        placeholder="Search girls"
-        single-line
-      ></v-text-field>
+      <div class="search__container">
+        <v-text-field
+          v-model="searchText"
+          @input="performSearch"
+          class="hidden-sm-and-down"
+          color="#fff"
+          flex
+          prepend-icon="fas fa-search"
+          placeholder="Search girls"
+          single-line
+          clearable
+          clear-icon="fas fa-times"
+          @click:clear="clearSearchResults"
+        ></v-text-field>
+
+        <v-card
+          v-if="searchResults.length"
+          class="search__card"
+          light
+        >
+          <v-list>
+            <v-list-tile
+              v-for="result in searchResults"
+              :key="result._id"
+              @click="goToSearchResult(result._id)"
+              avatar
+              inset
+            >
+              <v-list-tile-avatar>
+                <img :src="result.imageUrl" alt="">
+              </v-list-tile-avatar>
+
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{result.title}}
+                </v-list-tile-title>
+
+                <v-list-tile-sub-title>
+                  <span class="font-weight-light">
+                    {{formatDescription(result.description)}}
+                  </span>
+                </v-list-tile-sub-title>
+              </v-list-tile-content>
+
+              <v-list-tile-action v-if="checkIfUserFavorite(result._id)">
+                <v-icon color="error"
+                >fas fa-heart</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </div>
 
       <v-spacer></v-spacer>
 
@@ -179,6 +223,7 @@
   export default {
     name: 'App',
     data: () => ({
+      searchText: '',
       drawer: false,
       title: 'InstaGirls',
       authSnackbar: false,
@@ -204,7 +249,7 @@
       }
     },
     computed: {
-      ...mapGetters(['user', 'authError', 'userFavorites']),
+      ...mapGetters(['user', 'authError', 'userFavorites', 'searchResults']),
       menuButtons() {
         let items = [
           { title: 'Posts', icon: 'fas fa-images', link: '/posts' },
@@ -225,6 +270,23 @@
     methods: {
       signoutUser() {
         return this.$store.dispatch('clearUser');
+      },
+      performSearch() {
+        return this.$store.dispatch('searchPosts', {searchText: this.searchText})
+      },
+      goToSearchResult(postId) {
+        this.clearSearchResults();
+        this.$router.push(`/post/${postId}`);
+      },
+      clearSearchResults() {
+        this.searchText = '';
+        this.$store.commit('clearSearchResults');
+      },
+      formatDescription(desc) {
+        return desc.length > 20 ? `${desc.slice(0, 20)}...` : desc
+      },
+      checkIfUserFavorite(postId) {
+        return this.userFavorites && this.userFavorites.some(fave => fave._id === postId)
       }
     }
   }
@@ -291,6 +353,27 @@
 
     90% {
       transform: translate3d(0, -4px, 0);
+    }
+  }
+
+  .search {
+    &__container {
+      position: relative;
+      min-width: 33%;
+      max-width: 480px;
+
+      .v-text-field {
+        max-width: 480px;
+      }
+    }
+
+    &__card {
+      left: 0;
+      max-width: 480px;
+      right: 0;
+      position: absolute !important;
+      top: 100%;
+      z-index: 9;
     }
   }
 </style>

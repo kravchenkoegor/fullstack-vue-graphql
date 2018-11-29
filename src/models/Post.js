@@ -20,8 +20,7 @@ const PostSchema = new mongoose.Schema({
     required: true
   },
   description: {
-    type: String,
-    // required: true
+    type: String
   },
   createdDate: {
     type: Date,
@@ -35,7 +34,7 @@ const PostSchema = new mongoose.Schema({
   // ref ('User') === model
   createdBy: {
     type: ObjectId,
-    // required: true,
+    required: true,
     ref: 'User'
   },
   messages: [{
@@ -53,6 +52,11 @@ const PostSchema = new mongoose.Schema({
       ref: 'User'
     }
   }]
+});
+
+PostSchema.index({
+  // to search the text through all fields
+  '$**': 'text'
 })
 
 module.exports = mongoose.model('Post', PostSchema);

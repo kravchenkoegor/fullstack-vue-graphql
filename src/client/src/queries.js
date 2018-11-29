@@ -60,6 +60,18 @@ export const GET_POST = gql`
   }
 `;
 
+export const SEARCH_POSTS = gql`
+  query($searchText: String) {
+    searchPosts(searchText: $searchText) {
+      _id
+      title
+      imageUrl
+      description
+      likes
+    }
+  }
+`;
+
 // Posts Mutations
 export const ADD_POST = gql`
   mutation ($title: String!, $imageUrl: String!, $categories: [String]!, $description: String, $creatorId: ID) {

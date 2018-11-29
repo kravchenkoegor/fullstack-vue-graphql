@@ -6,15 +6,23 @@
           <v-card-title class="card__title">
             <h1>{{getPost.title}}</h1>
 
-            <v-btn
-              v-if="user"
-              large
-              icon
-              @click="toggleLike"
-            >
-              <v-icon
-                :color="checkIfPostLiked(getPost._id) ? 'error' : 'grey'">fas fa-heart</v-icon>
-            </v-btn>
+            <template v-if="user">
+              <v-btn
+                large
+                icon
+                @click="toggleLike"
+              >
+                <v-icon :color="checkIfPostLiked(getPost._id) ? 'error' : 'grey'">
+                  fas fa-heart
+                </v-icon>
+              </v-btn>
+            </template>
+
+            <template v-else>
+              <v-icon color="grey" class="ml-3 mr-2">
+                fas fa-heart
+              </v-icon>
+            </template>
 
             <h3 class="font-weight-light text-uppercase">
               {{getPost.likes}} {{getPost.likes !== 1 ? 'likes' : 'like'}}
@@ -60,19 +68,20 @@
             >
               <v-chip
                 class="mb-3"
+                :class="{'ml-0' : index === 0}"
                 color="accent"
                 text-color="white"
               >
                 {{category}}
               </v-chip>
             </span>
-            <h3 class="mb-0">{{getPost.description}}</h3>
+            <h3 class="font-weight-light mb-0 mt-3 card__subtitle">{{getPost.description}}</h3>
           </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
 
-    <v-layout v-if="user" class="my-3" row wrap>
+    <v-layout v-if="user" class="mt-3" row wrap>
       <v-flex xs12>
         <v-form @submit.prevent>
           <v-layout row>
@@ -80,6 +89,7 @@
               v-model="messageBody"
               label="Add a comment"
               clearable
+              clear-icon="fas fa-times"
               prepend-icon="fas fa-comment"
               :append-outer-icon="messageBody && 'fas fa-paper-plane'"
               @click:append-outer="addPostMessage"
@@ -92,7 +102,7 @@
 
     <v-layout row wrap>
       <v-flex xs12>
-        <h2 class="font-weight-bold mb-3">Comments</h2>
+        <h2 class="font-weight-bold my-3">Comments</h2>
         <v-list subheader two-line>
           <v-subheader>{{getPost.messages.length}} comments</v-subheader>
 
@@ -260,7 +270,7 @@
         return this.user && this.user._id === message.messageUser._id;
       },
       checkIfPostLiked(postId) {
-        if (this.user && this.user.favorites.some(fave => fave._id === postId)) {
+        if (this.userFavorites && this.userFavorites.some(fave => fave._id === postId)) {
           this.postLiked = true;
           return true
         } else {
@@ -304,5 +314,22 @@
     overflow: hidden;
     padding: 1rem;
     text-align: center;
+  }
+
+  .card {
+    &__subtitle {
+      position: relative;
+
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -16px;
+        height: 1px;
+        background-color: lighten(#9e9e9e, 20%);
+      }
+    }
   }
 </style>
