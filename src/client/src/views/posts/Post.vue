@@ -8,7 +8,7 @@
             <v-btn v-if="user" large icon>
               <v-icon color="grey">fas fa-heart</v-icon>
             </v-btn>
-            <h3 class="font-weight-light">{{getPost.likes}} LIKES</h3>
+            <h3 class="font-weight-light text-uppercase">{{getPost.likes}} {{getPost.likes !== 1 ? 'likes' : 'like'}}</h3>
             <v-spacer></v-spacer>
             <v-btn large icon>
               <v-icon
@@ -20,7 +20,7 @@
 
           <v-tooltip top>
             <span>Click to enlarge image</span>
-            <v-responsive slot="activator" @click="toggleImageDialog">
+            <v-responsive slot="activator" @click="showDialog">
               <img :src="getPost.imageUrl" alt="">
             </v-responsive>
           </v-tooltip>
@@ -34,7 +34,7 @@
             <v-btn
               class="modal__close"
               icon
-              @click="dialog = !dialog"
+              @click="closeDialog"
             >
               <v-icon color="#fff">fas fa-times</v-icon>
             </v-btn>
@@ -62,14 +62,15 @@
 
     <v-layout v-if="user" class="my-3" row wrap>
       <v-flex xs12>
-        <v-form>
+        <v-form @submit.prevent>
           <v-layout row>
             <v-text-field
-              v-model="messageText"
+              v-model="messageBody"
               label="Add a comment"
               clearable
               prepend-icon="fas fa-comment"
-              append-outer-icon="fas fa-paper-plane"
+              :append-outer-icon="messageBody && 'fas fa-paper-plane'"
+              @click:append-outer="addPostMessage"
               type="text"
             ></v-text-field>
           </v-layout>
@@ -106,7 +107,7 @@
               </v-list-tile-content>
 
               <v-list-tile-action class="hidden-xs-only">
-                <v-icon color="grey">fas fa-comment-dots</v-icon>
+                <v-icon :color="checkIfOwnMessage(message) ? 'primary' : 'grey'">fas fa-comment-dots</v-icon>
               </v-list-tile-action>
             </v-list-tile>
           </template>
@@ -118,14 +119,14 @@
 
 <script>
   import {mapGetters} from 'vuex';
-  import {GET_POST} from '../../queries';
+  import {GET_POST, ADD_POST_MESSAGE} from '../../queries';
 
   export default {
     name: 'Post',
     props: ['postId'],
     data: () => ({
       dialog: false,
-      messageText: ''
+      messageBody: ''
     }),
     apollo: {
       getPost: {
@@ -141,10 +142,45 @@
       ...mapGetters(['user'])
     },
     methods: {
-      toggleImageDialog() {
+      showDialog() {
         if (window.innerWidth > 600) {
-          this.dialog = !this.dialog
+          this.dialog = !this.dialog;
+          this.$disableHTMLScroll();
         }
+      },
+      closeDialog() {
+        this.dialog = !this.dialog;
+        this.$enableHTMLScroll();
+      },
+      addPostMessage() {
+        this.$apollo.mutate({
+          mutation: ADD_POST_MESSAGE,
+          variables: {
+            messageBody: this.messageBody,
+            userId: this.user._id,
+            postId: this.postId
+          },
+          update: (cache, {data: {addPostMessage}}) => {
+            // take the initial state
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: {postId: this.postId}
+            });
+            // add new message to post
+            data.getPost.messages.unshift(addPostMessage);
+            // update post with new data
+            cache.writeQuery({
+              query: GET_POST,
+              variables: {postId: this.postId},
+              data
+            });
+          }
+        })
+          .then(() => this.messageBody = '')
+          .catch((error) => console.error(error))
+      },
+      checkIfOwnMessage(message) {
+        return this.user && this.user._id === message.messageUser._id;
       }
     }
   }

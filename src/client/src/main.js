@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/vuetify'
+import './plugins/scrollFix'
 
 // Register global component
 import FormAlert from './components/shared/FormAlert'

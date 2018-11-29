@@ -69,6 +69,35 @@ module.exports = {
 
       return await new Post({title, imageUrl, categories, description, createdBy: creatorId}).save();
     },
+    addPostMessage: async (_, args, context) => {
+      const {messageBody, userId, postId} = args;
+      const {Post} = context;
+
+      const newMessage = {
+        messageBody,
+        messageUser: userId
+      };
+
+      const post = await Post.findOneAndUpdate(
+        // find post by id
+        {_id: postId},
+        // push a new message to the beginning of messages array
+        {
+          $push: {
+            messages: {
+              $each: [newMessage], $position: 0
+            }
+          }
+        },
+        // return updated document
+        {new: true}
+      ).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      });
+
+      return post.messages[0];
+    },
     register: async (_, args, context) => {
       const {username, email, password} = args;
       const {User} = context;

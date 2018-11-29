@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="infiniteScrollPosts" grid-list-lg>
+  <v-container v-if="infiniteScrollPosts" grid-list-lg class="py-5">
     <v-layout flex row wrap>
       <v-flex xs12 sm6 lg4 mb-2
         v-for="post in infiniteScrollPosts.posts"
@@ -31,9 +31,9 @@
             <v-card-actions class="pa-3">
               <v-card-title class="pa-0">
                 <span class="grey--text">
-                  {{post.likes}} likes
+                  {{post.likes}} {{post.likes !== 1 ? 'likes' : 'like'}}
                   <br>
-                  {{post.messages.length}} comments
+                  {{post.messages.length}} {{post.messages.length !== 1 ? 'comments' : 'comment'}}
                 </span>
               </v-card-title>
 
@@ -87,7 +87,7 @@
 
 <script>
   import {INFINITE_SCROLL_POSTS} from '../../queries';
-  const pageSize = 3;
+  const pageSize = 6;
 
   export default {
     name: 'Posts',
