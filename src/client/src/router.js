@@ -31,15 +31,21 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
+      path: '/posts',
+      name: 'posts',
+      component: () => import('./views/posts/Posts.vue')
+    },
+    {
       path: '/post/add',
       name: 'add',
       component: () => import('./views/posts/AddPost.vue'),
       beforeEnter: AuthGuard
     },
     {
-      path: '/posts',
-      name: 'posts',
-      component: () => import('./views/posts/Posts.vue')
-    },
+      path: '/post/:postId',
+      name: 'post',
+      component: () => import('./views/posts/Post.vue'),
+      props: true
+    }
   ]
 })

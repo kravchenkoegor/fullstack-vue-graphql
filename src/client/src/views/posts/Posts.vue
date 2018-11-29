@@ -11,12 +11,21 @@
             slot-scope="{ hover }"
             :class="`elevation-${hover ? 8 : 2}`"
           >
-            <v-responsive class="card__media">
+            <v-responsive
+              class="card__media"
+              @click.native="$router.push({path: `/post/${post._id}`})"
+            >
               <img :src="post.imageUrl" :alt="post.description" class="card__img">
             </v-responsive>
 
             <v-card-title class="card__title">
-              <h3 class="headline mb-0">{{post.title}}</h3>
+              <router-link
+                :to="`/post/${post._id}`"
+                tag="h3"
+                class="headline"
+              >
+                {{post.title}}
+              </router-link>
             </v-card-title>
 
             <v-card-actions class="pa-3">
@@ -135,12 +144,12 @@
 <style lang="scss" scoped>
   .card {
     &__media {
+      cursor: pointer;
       max-height: 460px;
     }
 
     &__img {
       height: 100%;
-      // max-width: 100%;
     }
 
     &__title {
@@ -155,6 +164,18 @@
         bottom: 0;
         height: 1px;
         background-color: lighten(#9e9e9e, 20%);
+      }
+
+      h3 {
+        cursor: pointer;
+        // font-weight: 700;
+        margin-bottom: 0;
+        transition: color .2s ease-in-out;
+
+        &:hover {
+          color: #094D92;
+          text-decoration: none;
+        }
       }
     }
   }

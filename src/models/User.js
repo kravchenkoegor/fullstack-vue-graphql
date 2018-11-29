@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
   },
   joinDate: {
     type: Date,
-    default: Date.now
+    default: new Date()
   },
   favorites: {
     type: ObjectId,
@@ -43,7 +43,7 @@ UserSchema.pre('save', function (next) {
   this.avatar = `http://gravatar.com/avatar/${md5(this.username)}?d=identicon`;
   next();
 });
-//
+
 // UserSchema.pre('save', function (next) {
 //   if (!this.isModified('password')) {
 //     return next();
@@ -63,8 +63,6 @@ UserSchema.pre('save', function (next) {
 //       next();
 //     })
 //   })
-//
-//
 // });
 
 module.exports = mongoose.model('User', UserSchema);

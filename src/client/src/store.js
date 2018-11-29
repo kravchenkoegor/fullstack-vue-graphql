@@ -69,7 +69,6 @@ export default new Vuex.Store({
             _id: -1,
             ...payload
           }
-
         }
       })
         .then(({data}) => {

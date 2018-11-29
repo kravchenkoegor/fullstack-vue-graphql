@@ -36,6 +36,30 @@ export const INFINITE_SCROLL_POSTS = gql`
   }
 `;
 
+export const GET_POST = gql`
+  query($postId: ID!) {
+    getPost(postId: $postId) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+      likes
+      createdDate
+      messages {
+        _id
+        messageBody
+        messageDate
+        messageUser {
+          _id
+          username
+          avatar
+        }
+      }
+    }
+  }
+`;
+
 // Posts Mutations
 export const ADD_POST = gql`
   mutation ($title: String!, $imageUrl: String!, $categories: [String]!, $description: String, $creatorId: ID) {

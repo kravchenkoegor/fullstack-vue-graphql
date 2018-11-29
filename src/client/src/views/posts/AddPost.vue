@@ -45,7 +45,6 @@
                 multiple
                 :rules="[() => selectedCategories.length >= 1 || 'At least one category is required']"
               >
-
               </v-select>
 
               <v-textarea
@@ -55,8 +54,6 @@
                 rows="1"
                 auto-grow
               ></v-textarea>
-
-
             </v-form>
           </v-card-text>
           <v-card-actions>

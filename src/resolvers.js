@@ -54,6 +54,12 @@ module.exports = {
       const hasMore = totalPosts > pageSize * pageNum;
 
       return {posts, hasMore};
+    },
+    getPost: async (_, {postId}, {Post}) => {
+      return await Post.findOne({_id: postId}).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      })
     }
   },
   Mutation: {

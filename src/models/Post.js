@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // see https://github.com/apollographql/apollo-server/issues/1633
 const {ObjectId} = mongoose.Types;
-ObjectId.prototype.valueOf = function () {
+ObjectId.prototype.valueOf = function() {
   return this.toString()
 }
 
@@ -25,7 +25,7 @@ const PostSchema = new mongoose.Schema({
   },
   createdDate: {
     type: Date,
-    default: Date.now
+    default: new Date()
   },
   likes: {
     type: Number,
@@ -45,7 +45,7 @@ const PostSchema = new mongoose.Schema({
     },
     messageDate: {
       type: Date,
-      default: Date.now
+      default: new Date()
     },
     messageUser: {
       type: ObjectId,
