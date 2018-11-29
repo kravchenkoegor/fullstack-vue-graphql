@@ -19,14 +19,14 @@
 
       <v-spacer></v-spacer>
 
-      <!--<v-text-field-->
-        <!--class="hidden-sm-and-down"-->
-        <!--color="#fff"-->
-        <!--flex-->
-        <!--prepend-icon="fas fa-search"-->
-        <!--placeholder="Search girls"-->
-        <!--single-line-->
-      <!--&gt;</v-text-field>-->
+      <v-text-field
+        class="hidden-sm-and-down"
+        color="#fff"
+        flex
+        prepend-icon="fas fa-search"
+        placeholder="Search girls"
+        single-line
+      ></v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -47,9 +47,16 @@
             to="/profile"
           >
             <v-icon left>fas fa-user-circle</v-icon>
-            <v-badge right color="accent">
-              <!--<span slot="badge">1</span>-->
-              Profile
+            <v-badge
+              right
+              color="success"
+              :class="{'bounce': badgeAnimated}"
+            >
+              <span
+                v-if="userFavorites.length"
+                slot="badge"
+              >{{userFavorites.length}}</span>
+                Profile
             </v-badge>
           </v-btn>
 
@@ -103,9 +110,12 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                <v-badge right color="accent">
-                <!--<span slot="badge">1</span>-->
-                Profile
+                <v-badge right color="primary">
+                <span
+                  v-if="userFavorites.length"
+                  slot="badge"
+                >{{userFavorites.length}}</span>
+                  Profile
                 </v-badge>
               </v-list-tile-title>
             </v-list-tile-content>
@@ -170,9 +180,10 @@
     name: 'App',
     data: () => ({
       drawer: false,
-      title: 'Vue + GraphQL',
+      title: 'InstaGirls',
       authSnackbar: false,
-      authErrorSnackbar: false
+      authErrorSnackbar: false,
+      badgeAnimated: false
     }),
     watch: {
       user(newValue, oldValue) {
@@ -184,10 +195,16 @@
         if (value !== null) {
           this.authErrorSnackbar = true;
         }
+      },
+      userFavorites(value) {
+        if (value) {
+          this.badgeAnimated = true;
+          setTimeout(() => (this.badgeAnimated = false), 1000);
+        }
       }
     },
     computed: {
-      ...mapGetters(['user', 'authError']),
+      ...mapGetters(['user', 'authError', 'userFavorites']),
       menuButtons() {
         let items = [
           { title: 'Posts', icon: 'fas fa-images', link: '/posts' },
@@ -196,6 +213,7 @@
 
         if (!this.user) {
           items = [
+            { title: 'Posts', icon: 'fas fa-images', link: '/posts' },
             { title: 'Login', icon: 'fas fa-sign-in-alt', link: '/login' },
             { title: 'Register', icon: 'fas fa-user-plus', link: '/register' }
           ];
@@ -224,6 +242,8 @@
   }
 
   .toolbar {
+    z-index: 9;
+
     &__link {
       cursor: pointer;
       transition: opacity .2s ease-in-out;
@@ -232,6 +252,10 @@
         opacity: .8;
       }
     }
+  }
+
+  .v-list__tile__title {
+     overflow: visible !important;
   }
 
   .fade-enter-active,
@@ -246,5 +270,27 @@
   .fade-enter,
   .fade-leave-active {
     opacity: 0;
+  }
+
+  .bounce {
+    animation: bounce 1s both;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0, 0, 0);
+    }
+
+    40%, 43% {
+      transform: translate3d(0, -20px, 0);
+    }
+
+    70% {
+      transform: translate3d(0, -10px, 0);
+    }
+
+    90% {
+      transform: translate3d(0, -4px, 0);
+    }
   }
 </style>

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const md5 = require('md5');
 
 // see https://github.com/apollographql/apollo-server/issues/1633
-const {ObjectId} = mongoose.Types;
+const {ObjectId} = mongoose.Schema.Types;
 ObjectId.prototype.valueOf = function () {
   return this.toString()
 };
@@ -32,11 +32,11 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: new Date()
   },
-  favorites: {
+  favorites: [{
     type: ObjectId,
-    // required: true,
+    required: true,
     ref: 'Post'
-  }
+  }]
 });
 
 UserSchema.pre('save', function (next) {

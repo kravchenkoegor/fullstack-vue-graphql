@@ -13,10 +13,12 @@ module.exports = {
         return null;
       }
 
-      return await User.findOne({username: currentUser.username}).populate({
+      const user = await User.findOne({username: currentUser.username}).populate({
         path: 'favorites',
         model: 'Post'
       });
+
+      return user
     },
     getPosts: async (_, args, {Post}) => {
       return await Post.find({})
@@ -97,6 +99,54 @@ module.exports = {
       });
 
       return post.messages[0];
+    },
+    likePost: async (_, args, context) => {
+      const {postId, username} = args;
+      const {Post, User} = context;
+
+      const post = await Post.findOneAndUpdate(
+        {_id: postId},
+        {$inc: { likes: 1 }},
+        {new: true}
+      );
+
+      const user = await User.findOneAndUpdate(
+        {username},
+        {$addToSet: { favorites: postId }},
+        {new: true}
+      ).populate({
+        path: 'favorites',
+        model: 'Post'
+      });
+
+      return {
+        likes: post.likes,
+        favorites: user.favorites
+      }
+    },
+    unlikePost: async (_, args, context) => {
+      const {postId, username} = args;
+      const {Post, User} = context;
+
+      const post = await Post.findOneAndUpdate(
+        {_id: postId},
+        {$inc: { likes: -1 }},
+        {new: true}
+      );
+
+      const user = await User.findOneAndUpdate(
+        {username},
+        {$pull: { favorites: postId }},
+        {new: true}
+      ).populate({
+        path: 'favorites',
+        model: 'Post'
+      });
+
+      return {
+        likes: post.likes,
+        favorites: user.favorites
+      }
     },
     register: async (_, args, context) => {
       const {username, email, password} = args;

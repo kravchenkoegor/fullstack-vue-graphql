@@ -5,15 +5,27 @@
         <v-card class="card">
           <v-card-title class="card__title">
             <h1>{{getPost.title}}</h1>
-            <v-btn v-if="user" large icon>
-              <v-icon color="grey">fas fa-heart</v-icon>
+
+            <v-btn
+              v-if="user"
+              large
+              icon
+              @click="toggleLike"
+            >
+              <v-icon
+                :color="checkIfPostLiked(getPost._id) ? 'error' : 'grey'">fas fa-heart</v-icon>
             </v-btn>
-            <h3 class="font-weight-light text-uppercase">{{getPost.likes}} {{getPost.likes !== 1 ? 'likes' : 'like'}}</h3>
+
+            <h3 class="font-weight-light text-uppercase">
+              {{getPost.likes}} {{getPost.likes !== 1 ? 'likes' : 'like'}}
+            </h3>
+
             <v-spacer></v-spacer>
+
             <v-btn large icon>
               <v-icon
                 color="primary"
-                @click="$router.go(-1)"
+                @click="$router.push('/posts')"
               >fas fa-chevron-circle-left</v-icon>
             </v-btn>
           </v-card-title>
@@ -119,14 +131,20 @@
 
 <script>
   import {mapGetters} from 'vuex';
-  import {GET_POST, ADD_POST_MESSAGE} from '../../queries';
+  import {
+    GET_POST,
+    ADD_POST_MESSAGE,
+    LIKE_POST,
+    UNLIKE_POST
+  } from '../../queries';
 
   export default {
     name: 'Post',
     props: ['postId'],
     data: () => ({
       dialog: false,
-      messageBody: ''
+      messageBody: '',
+      postLiked: false
     }),
     apollo: {
       getPost: {
@@ -139,7 +157,7 @@
       }
     },
     computed: {
-      ...mapGetters(['user'])
+      ...mapGetters(['user', 'userFavorites'])
     },
     methods: {
       showDialog() {
@@ -179,8 +197,76 @@
           .then(() => this.messageBody = '')
           .catch((error) => console.error(error))
       },
+      likePost() {
+        this.$apollo.mutate({
+          mutation: LIKE_POST,
+          variables: {
+            postId: this.postId,
+            username: this.user.username
+          },
+          update: (cache) => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: {postId: this.postId}
+            });
+            data.getPost.likes++;
+            cache.writeQuery({
+              query: GET_POST,
+              variables: {postId: this.postId},
+              data
+            });
+          }
+        })
+          .then(({data}) => {
+            const updatedUser = { ...this.user, favorites: data.likePost.favorites };
+            this.$store.commit('setUser', updatedUser);
+          })
+          .catch(error => console.error(error))
+      },
+      unlikePost() {
+        this.$apollo.mutate({
+          mutation: UNLIKE_POST,
+          variables: {
+            postId: this.postId,
+            username: this.user.username
+          },
+          update: (cache) => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: {postId: this.postId}
+            });
+            data.getPost.likes--;
+            cache.writeQuery({
+              query: GET_POST,
+              variables: {postId: this.postId},
+              data
+            });
+          }
+        })
+          .then(({data}) => {
+            const updatedUser = { ...this.user, favorites: data.unlikePost.favorites };
+            this.$store.commit('setUser', updatedUser);
+          })
+          .catch(error => console.error(error))
+      },
+      toggleLike() {
+        if (this.postLiked) {
+          this.unlikePost()
+        } else {
+          this.likePost()
+        }
+      },
       checkIfOwnMessage(message) {
         return this.user && this.user._id === message.messageUser._id;
+      },
+      checkIfPostLiked(postId) {
+        if (this.user && this.user.favorites.some(fave => fave._id === postId)) {
+          this.postLiked = true;
+          return true
+        } else {
+          this.postLiked = false;
+          return false
+        }
       }
     }
   }
