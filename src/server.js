@@ -24,7 +24,8 @@ const getUser = async (token) => {
     try {
       return await jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
-      throw new AuthenticationError('Your session has expired.');
+      // throw new AuthenticationError('Your session has expired.');
+      console.error('Your session has expired.')
     }
   }
 }
@@ -42,7 +43,7 @@ const server = new ApolloServer({
     return {
       User,
       Post,
-      currentUser: await getUser(token)
+      currentUser: await getUser(token) || null
     };
   }
 });

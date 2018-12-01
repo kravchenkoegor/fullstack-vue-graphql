@@ -60,6 +60,18 @@ export const GET_POST = gql`
   }
 `;
 
+export const GET_USER_POSTS = gql`
+  query($userId: ID!) {
+    getUserPosts(userId: $userId) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+    }
+  }
+`;
+
 export const SEARCH_POSTS = gql`
   query($searchText: String) {
     searchPosts(searchText: $searchText) {
@@ -86,6 +98,27 @@ export const ADD_POST = gql`
         _id
         username
       }
+    }
+  }
+`;
+
+export const UPDATE_POST = gql`
+  mutation ($postId: ID!, $userId: ID!, $title: String!, $imageUrl: String!, $categories: [String]!, $description: String) {
+    updatePost(postId: $postId, userId: $userId, title: $title, imageUrl: $imageUrl, categories: $categories, description: $description) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+      createdDate
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation($postId: ID!) {
+    deletePost(postId: $postId) {
+      _id
     }
   }
 `;

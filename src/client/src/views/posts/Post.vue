@@ -33,7 +33,7 @@
             <v-btn large icon>
               <v-icon
                 color="primary"
-                @click="$router.push('/posts')"
+                @click="$router.go(-1)"
               >fas fa-chevron-circle-left</v-icon>
             </v-btn>
           </v-card-title>
@@ -75,7 +75,11 @@
                 {{category}}
               </v-chip>
             </span>
-            <h3 class="font-weight-light mb-0 mt-3 card__subtitle">{{getPost.description}}</h3>
+            <h3 v-if="getPost.description"
+              class="font-weight-light mb-0 mt-3 card__subtitle"
+            >
+              {{getPost.description}}
+            </h3>
           </v-card-text>
         </v-card>
       </v-flex>

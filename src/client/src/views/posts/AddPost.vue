@@ -69,7 +69,7 @@
 
             <v-btn
               :loading="loading"
-              color="primary"
+              color="success"
               @click="onSubmit"
               :disabled="!isFormValid || loading"
             >
@@ -100,7 +100,8 @@
         'Travel',
         'Food',
         'Technology',
-        'Cars'
+        'Cars',
+        'Girls'
       ],
       selectedCategories: [],
       isFormValid: true
@@ -127,7 +128,7 @@
           })
           this.$router.push('/')
         }
-      },
+      }
     }
   }
 </script>

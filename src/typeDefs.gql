@@ -45,12 +45,28 @@ type Query {
     getCurrentUser: User
     getPosts: [Post]
     getPost(postId: ID!): Post!
+    getUserPosts(userId: ID!): [Post]
     infiniteScrollPosts(pageNum: Int!, pageSize: Int!): PostsPage
     searchPosts(searchText: String): [Post]
 }
 
 type Mutation {
-    addPost(title: String!, imageUrl: String!, categories: [String]!, description: String, creatorId: ID): Post!
+    addPost(
+        title: String!,
+        imageUrl: String!,
+        categories: [String]!,
+        description: String,
+        creatorId: ID
+    ): Post!
+    updatePost(
+        postId: ID!,
+        userId: ID!,
+        title: String!,
+        imageUrl: String!,
+        categories: [String]!,
+        description: String
+    ): Post!
+    deletePost(postId: ID!): Post!
     addPostMessage(messageBody: String!, userId: ID!, postId: ID!): Message!
     likePost(postId: ID!, username: String!): Favorites!
     unlikePost(postId: ID!, username: String!): Favorites!

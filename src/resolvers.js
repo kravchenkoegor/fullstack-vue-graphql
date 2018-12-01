@@ -13,12 +13,10 @@ module.exports = {
         return null;
       }
 
-      const user = await User.findOne({username: currentUser.username}).populate({
+      return await User.findOne({username: currentUser.username}).populate({
         path: 'favorites',
         model: 'Post'
       });
-
-      return user
     },
     getPosts: async (_, args, {Post}) => {
       return await Post.find({})
@@ -63,6 +61,9 @@ module.exports = {
         model: 'User'
       })
     },
+    getUserPosts: async (_, {userId}, {Post}) => {
+      return await Post.find({createdBy: userId}).sort({createdDate: 'desc'})
+    },
     searchPosts: async (_, {searchText}, {Post}) => {
       if (searchText) {
         return await Post.find(
@@ -85,6 +86,29 @@ module.exports = {
       const {Post} = context;
 
       return await new Post({title, imageUrl, categories, description, createdBy: creatorId}).save();
+    },
+    updatePost: async (_, args, context) => {
+      const {postId, userId, title, imageUrl, categories, description} = args;
+      const {Post} = context;
+
+      return await Post.findOneAndUpdate(
+        {_id: postId, createdBy: userId},
+        { $set: {
+            title,
+            imageUrl,
+            categories,
+            description
+          }
+        },
+        {new: true}
+      )
+    },
+    deletePost: async (_, args, context) => {
+      const {postId} = args;
+      const {Post} = context;
+
+      return await Post.findOneAndRemove({_id: postId})
+
     },
     addPostMessage: async (_, args, context) => {
       const {messageBody, userId, postId} = args;
@@ -172,7 +196,7 @@ module.exports = {
       if (!user) {
         const newUser = await new User({username, email, password}).save();
         return {
-          token: createToken(newUser, process.env.JWT_SECRET, '1h')
+          token: createToken(newUser, process.env.JWT_SECRET, '1d')
         };
       } else {
         throw new Error('User already exists');
@@ -189,7 +213,7 @@ module.exports = {
       } else {
         if (user.password === password) {
           return {
-            token: createToken(user, process.env.JWT_SECRET, '1h')
+            token: createToken(user, process.env.JWT_SECRET, '1d')
           };
         } else {
           throw new Error(`Wrong password. Please try again`);
