@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 // see https://github.com/apollographql/apollo-server/issues/1633
 const {ObjectId} = mongoose.Types;
@@ -23,8 +24,8 @@ const PostSchema = new mongoose.Schema({
     type: String
   },
   createdDate: {
-    type: Date,
-    default: new Date()
+    type: String,
+    required: true
   },
   likes: {
     type: Number,
@@ -43,8 +44,8 @@ const PostSchema = new mongoose.Schema({
       required: true
     },
     messageDate: {
-      type: Date,
-      default: new Date()
+      type: String,
+      required: true
     },
     messageUser: {
       type: ObjectId,

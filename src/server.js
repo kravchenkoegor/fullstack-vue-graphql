@@ -1,7 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const {ApolloServer, AuthenticationError} = require('apollo-server');
+const {ApolloServer} = require('apollo-server');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
@@ -24,7 +24,6 @@ const getUser = async (token) => {
     try {
       return await jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
-      // throw new AuthenticationError('Your session has expired.');
       console.error('Your session has expired.')
     }
   }

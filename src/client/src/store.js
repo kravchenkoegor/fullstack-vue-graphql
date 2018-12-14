@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import {defaultClient as apolloClient} from './main';
 import {
   GET_POSTS,
+  INFINITE_SCROLL_POSTS,
   GET_USER_POSTS,
   ADD_POST,
   LOGIN,
@@ -116,10 +117,19 @@ export default new Vuex.Store({
             _id: -1,
             ...payload
           }
-        }
+        },
+        // rerun specified queries after performing a mutation
+        refetchQueries: [
+          {
+            query: INFINITE_SCROLL_POSTS,
+            variables: {
+              pageNum: 1,
+              pageSize: 4
+            }
+          }
+        ]
       })
-        .then(({data}) => {
-          console.log(data.addPost)
+        .then(() => {
           commit('setLoading', false);
         })
         .catch(error => {
@@ -161,7 +171,7 @@ export default new Vuex.Store({
             ...state.userPosts.slice(index + 1)
           ];
 
-          commit('setUserPosts', updatedPosts)
+          commit('setUserPosts', updatedPosts);
         })
         .catch(error => console.error(error))
     },

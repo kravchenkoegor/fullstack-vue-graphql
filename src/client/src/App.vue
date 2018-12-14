@@ -27,7 +27,7 @@
           color="#fff"
           flex
           prepend-icon="fas fa-search"
-          placeholder="Search girls"
+          placeholder="Search"
           single-line
           clearable
           clear-icon="fas fa-times"
@@ -225,7 +225,7 @@
     data: () => ({
       searchText: '',
       drawer: false,
-      title: 'InstaGirls',
+      title: 'Vue.js + GraphQL App',
       authSnackbar: false,
       authErrorSnackbar: false,
       badgeAnimated: false

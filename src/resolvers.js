@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 function createToken(user, secret, expiresIn) {
   const {username, email} = user;
@@ -85,7 +86,14 @@ module.exports = {
       const {title, imageUrl, categories, description, creatorId} = args;
       const {Post} = context;
 
-      return await new Post({title, imageUrl, categories, description, createdBy: creatorId}).save();
+      return await new Post({
+        title,
+        imageUrl,
+        categories,
+        description,
+        createdDate: moment().format('DD MMMM YYYY'),
+        createdBy: creatorId
+      }).save();
     },
     updatePost: async (_, args, context) => {
       const {postId, userId, title, imageUrl, categories, description} = args;
@@ -116,6 +124,7 @@ module.exports = {
 
       const newMessage = {
         messageBody,
+        messageDate: moment().format('DD MMMM YYYY HH:mm'),
         messageUser: userId
       };
 
@@ -194,7 +203,12 @@ module.exports = {
       const user = await User.findOne({username});
 
       if (!user) {
-        const newUser = await new User({username, email, password}).save();
+        const newUser = await new User({
+          username,
+          email,
+          password,
+          joinDate: moment().format('DD MMMM YYYY')
+        }).save();
         return {
           token: createToken(newUser, process.env.JWT_SECRET, '1d')
         };

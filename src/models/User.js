@@ -29,8 +29,8 @@ const UserSchema = new mongoose.Schema({
     type: String
   },
   joinDate: {
-    type: Date,
-    default: new Date()
+    type: String,
+    required: true
   },
   favorites: [{
     type: ObjectId,

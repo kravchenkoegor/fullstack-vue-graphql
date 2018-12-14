@@ -16,7 +16,7 @@ type Post {
     description: String
     createdDate: String
     likes: Int
-    createdBy: User!
+    createdBy: User
     messages: [Message]
 }
 

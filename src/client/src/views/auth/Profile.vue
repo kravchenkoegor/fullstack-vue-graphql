@@ -32,7 +32,7 @@
     <template v-if="!userFavorites.length">
       <v-layout row wrap mt-4 pt-4>
         <v-flex xs12>
-          <h2 class="font-weight-light">You have no favorites currently. <router-link to="/posts">Go here</router-link> and add some =)</h2>
+          <h2 class="font-weight-light">You have no favorites currently. <router-link to="/posts">Go here</router-link> and add some 😉</h2>
         </v-flex>
       </v-layout>
     </template>
@@ -84,7 +84,7 @@
     <template v-if="!userPosts.length">
       <v-layout row wrap mt-4 pt-4>
         <v-flex xs12>
-          <h2 class="font-weight-light">You have no added posts currently. <router-link to="/post/add">Go here</router-link> and add some =)</h2>
+          <h2 class="font-weight-light">You have no added posts currently. <router-link to="/post/add">Go here</router-link> and add some 😉</h2>
         </v-flex>
       </v-layout>
     </template>

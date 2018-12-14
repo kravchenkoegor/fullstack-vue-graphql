@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from './store';
 import Home from './views/Home.vue';
 import AuthGuard from './AuthGuard';
 
@@ -33,7 +34,7 @@ export default new Router({
     {
       path: '/posts',
       name: 'posts',
-      component: () => import('./views/posts/Posts.vue')
+      component: () => import('./views/posts/Posts.vue'),
     },
     {
       path: '/post/add',

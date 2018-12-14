@@ -34,7 +34,7 @@
 
               <v-layout row v-if="imageUrl">
                 <v-flex xs12>
-                  <img :src="imageUrl" alt="" height="300px">
+                  <img :src="imageUrl" alt="" style="max-width: 100%; max-height: 300px; height: auto;">
                 </v-flex>
               </v-layout>
 
