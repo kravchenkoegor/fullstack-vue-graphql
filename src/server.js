@@ -3,9 +3,18 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const {ApolloServer} = require('apollo-server');
+const {ApolloServer} = require('apollo-server-express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+
+// Start Express server
+const app = express();
+app.use(router);
+app.use('/static', express.static(path.join(__dirname, '/static')));
+
+router.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/static/index.html'));
+});
 
 // Import Mongoose models
 const User = require('./models/User');
@@ -49,16 +58,6 @@ const server = new ApolloServer({
   }
 });
 
-server.listen({port: 4000})
-  .then(({url}) => console.log(`Apollo Server is listening on ${url}`));
-
-const app = express();
-app.use(router);
-app.use('/static', express.static(path.join(__dirname, '/static')));
-app.listen(process.env.PORT || 5000);
-console.log(`Express server is listening on port ${process.env.PORT || 5000}`);
-
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/static/index.html'))
-});
-
+// Add the Apollo Server’s middleware
+server.applyMiddleware({app})
+app.listen({port: process.env.PORT || 5000}, () => console.log(`Apollo Server is listening on ${server.graphqlPath}`))
