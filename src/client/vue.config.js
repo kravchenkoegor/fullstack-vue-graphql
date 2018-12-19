@@ -1,4 +1,5 @@
 const config = {
+  assetsDir: 'static',
   configureWebpack: {
     resolve: {
       // .mjs needed for https://github.com/graphql/graphql-js/issues/1272
@@ -13,7 +14,8 @@ const config = {
         }
       ]
     }
-  }
+  },
+
 }
 
 module.exports = config

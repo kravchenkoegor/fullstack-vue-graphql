@@ -300,7 +300,8 @@
 
   .container {
     max-width: 1170px !important;
-    padding: 0 15px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
 
   .toolbar {

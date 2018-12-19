@@ -1,4 +1,7 @@
 require('dotenv').config();
+const express = require('express');
+const router = express.Router();
+const history = require('connect-history-api-fallback');
 const fs = require('fs');
 const path = require('path');
 const {ApolloServer} = require('apollo-server');
@@ -47,5 +50,17 @@ const server = new ApolloServer({
   }
 });
 
-server.listen()
-  .then(({url}) => console.log(`Server is listening on ${url}`));
+server.listen({port: 4000}).then(({url}) => console.log(`Apollo Server is listening on ${url}`));
+
+const app = express();
+app.use(router);
+app.use(history());
+// app.use(express.static('static'));
+app.use('/static', express.static(path.join(__dirname, '/static')));
+app.listen(process.env.PORT || 5000);
+console.log(`Express server is listening on port ${process.env.PORT || 5000}`);
+
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/static/index.html'))
+});
+
