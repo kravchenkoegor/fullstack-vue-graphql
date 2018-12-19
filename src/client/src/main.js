@@ -16,7 +16,7 @@ import VueApollo from 'vue-apollo'
 Vue.use(VueApollo)
 
 export const defaultClient = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: `${process.env.HOST}:4000/graphql`,
   fetchOptions: {
     credentials: 'include'
   },
